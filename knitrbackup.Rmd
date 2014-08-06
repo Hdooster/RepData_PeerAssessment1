@@ -1,0 +1,111 @@
+---
+title: "Reproducible Research Project 1"
+author: "Hendrik D'Oosterlinck"
+date: "Wednesday, August 06, 2014"
+output: html_document
+---
+
+
+```{r echo=FALSE}
+#This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```
+
+##Loading and preprocessing the data and making sure the dates are in class 'Date', not in class 'Factor'.
+
+```{r}
+activity <- read.csv("RepData_PeerAssessment1/activity.csv",header=T, sep=",", quote="\"",stringsAsFactors = FALSE)
+
+activity$date <- as.Date(activity$date)
+```
+
+```{r}
+activity <- read.csv("RepData_PeerAssessment1/activity.csv",header=T, sep=",", quote="\"",stringsAsFactors = TRUE)
+```
+
+
+
+##What is mean total number of steps taken per day?
+
+```{r}
+#summing up the steps per day using aggregate
+perday <- aggregate(formula = steps~date, data=activity, FUN=sum, na.action=na.omit)
+
+#calculating mean and median
+mean_perday <- mean(perday$steps)
+median_perday <- median(perday$steps)
+```
+
+```{r echo=FALSE, plot_steps, fig.width=8, fig.height=4}
+require(ggplot2)
+
+#plotting a histogram in ggplot
+histogram <-  qplot(x=date, y=steps, data=perday, stat='summary', fun.y=sum, geom='histogram') + 
+  labs(title='Figure 1: Number of steps per day\n',
+       y='Total steps per day', x='Date')
+
+plot(histogram)
+
+```
+
+
+##What is the average daily activity pattern?
+```{r echo=FALSE, plot_steps, fig.width=8, fig.height=4}
+perinterval <- aggregate(formula = steps~interval, data=activity, FUN=mean, na.action=na.omit)
+
+plot2 <- qplot(perinterval$interval,perinterval$steps,geom='line') + 
+labs(title="Figure 2", x="Interval no.", y="Mean number of steps per interval")
+
+plot(plot2)
+```
+
+##Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+To find this one we just ask R for the row in 'perinterval' where the steps value is largest using function which.
+```{r}
+perinterval[which(perinterval$steps==max(perinterval$steps)),]
+
+```
+
+##NA-values
+1. The amount of missing values
+```{r}
+#dimensions of 'activity' with only the incomplete cases (NA's). Take the length by adding [1] of the dim() vector c(#rows, #columns=3).
+missingvalues <- dim(activity[!complete.cases(activity),])[1]
+missingsteps <- dim(activity[is.na(activity$steps),])[1]
+```
+
+2-3. Filling in the missing values
+If a step has a missing value NA, replace that missing value with the average for that step (across multiple days).
+```{r}
+head(activity)
+head(miss)
+miss <- activity[!complete.cases(activity),] #extract the NA rows, keep the rownames (the row numbers they have in 'activity')
+fill_miss<-merge(miss,perinterval,by.x="interval") #use merge (just like index/matching in excel) to go grab an interval's average steps from  'perinterval'.
+head(fill_miss) #we now have steps.x and steps.y
+activity2<-activity #new data frame
+activity2[rownames(miss),1] <- fill_miss$steps.y #miss still knows what row numbers the NA values were at! take activity2 at those rownames, and fill in the 'NA' steps as the 'fill_miss$steps.y'
+head(activity2)
+```
+
+4. New mean, median, and histogram
+
+```{r}
+#summing up the steps per day using aggregate
+perday2 <- aggregate(formula = steps~date, data=activity2, FUN=sum, na.action=na.omit)
+
+#calculating mean and median
+mean_perday2 <- mean(perday$steps)
+median_perday2 <- median(perday$steps)
+```
+
+```{r echo=FALSE, plot_steps, fig.width=8, fig.height=4}
+require(ggplot2)
+
+#plotting a histogram in ggplot
+histogram2 <-  qplot(x=date, y=steps, data=perday2, stat='summary', fun.y=sum, geom='histogram') + 
+  labs(title='Figure 1: Number of steps per day\n',
+       y='Total steps per day', x='Date')
+
+plot(histogram2)
+
+```

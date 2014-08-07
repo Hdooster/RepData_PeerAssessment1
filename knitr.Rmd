@@ -1,7 +1,7 @@
 ---
 title: "Reproducible Research Project 1"
 author: "HDooster"
-date: "Wednesday, August 06, 2014"
+date: "Thursday, August 07, 2014"
 output:
   html_document:
     fig_caption: yes
@@ -48,6 +48,7 @@ plot(histogram)
 
 
 ##What is the average daily activity pattern?
+
 ```{r}
 perinterval <- aggregate(formula = steps~interval, data=activity, FUN=mean, na.action=na.omit)
 ```
@@ -63,7 +64,6 @@ plot(plot2)
 To find this one we just ask R for the row in 'perinterval' where the steps value is largest using function which.
 ```{r}
 perinterval[which(perinterval$steps==max(perinterval$steps)),]
-print(perinterval)
 ```
 
 ##NA-values
@@ -103,9 +103,9 @@ mean_perday2 <- mean(perday$steps)
 median_perday2 <- median(perday$steps)
 print(mean_perday2)
 print(median_perday2)
-#now we see the median and mean per day don't change. 
-```
 
+```
+Now we see the median and mean per day don't change. 
 ```{r echo=FALSE, plot_steps, fig.width=8, fig.height=4}
 require(ggplot2)
 
@@ -133,7 +133,7 @@ activity2$week <- factor(ifelse(format(activity2$date,format = '%u') %in% c(1:5)
 weekperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$week=="week",], FUN=mean, na.action=na.omit)
 
 plot3 <- qplot(weekperinterval$interval, weekperinterval$steps,geom='line') + 
-labs(title="Figure 4", x="Interval no.", y="Mean number of steps per interval during the week")
+labs(title="Figure 4: week data", x="Interval no.", y="Mean number of steps per interval")
 
 plot(plot3)
 ```
@@ -142,9 +142,12 @@ plot(plot3)
 weekendperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$week=="week-end",], FUN=mean, na.action=na.omit)
 
 plot4 <- qplot(weekendperinterval$interval, weekendperinterval$steps,geom='line') + 
-labs(title="Figure 5", x="Interval no.", y="Mean number of steps per interval during the week-end")
+labs(title="Figure 5: week-end data", x="Interval no.", y="Mean number of steps per interval during the week-end")
 
 plot(plot4)
 ```
 
 Here we can see week-ends seem to bring along more variety and a later start of the day, as can be expected with a standard life-style of studying/working in the week and leisure activities in the week-end.
+
+##Results
+The activity data was analyzed per day and per interval. Missing values were filled into 'activity2' by the mean step values of their intervals and the analysis was repeated.

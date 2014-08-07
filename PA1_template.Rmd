@@ -7,14 +7,16 @@ output:
     fig_caption: yes
 ---
 
+Make knitr copy the figures into a folder named likewise.
 
-
+```{r}
+knitr::opts_chunk$set(tidy=FALSE, fig.path='figures/')
+```
 
 ##Loading and preprocessing the data and making sure the dates are in class 'Date', not in class 'Factor'.
 
 ```{r}
-activity <- read.csv("activity.csv",header=T, sep=",", quote="\"",stringsAsFactors = FALSE)
-
+activity <- read.csv("data/activity.csv",header=T, sep=",", quote="\"",stringsAsFactors = FALSE)
 activity$date <- as.Date(activity$date)
 ```
 
@@ -34,7 +36,8 @@ print(mean_perday)
 print(median_perday)
 ```
 
-```{r echo=TRUE, steps_perday, fig.width=8, fig.height=4}
+This R code needs the 'ggplot2' package to be installed on your device.
+```{r, steps_perday, fig.width=8, fig.height=4}
 require(ggplot2)
 
 #plotting a histogram in ggplot
@@ -54,7 +57,7 @@ perinterval <- aggregate(formula = steps~interval, data=activity, FUN=mean, na.a
 ```
 
 
-```{r echo=TRUE, steps_perinterval, fig.width=8, fig.height=4}
+```{r, steps_perinterval, fig.width=8, fig.height=4}
 plot2 <- qplot(perinterval$interval, perinterval$steps,geom='line') + 
 labs(title="Figure 2", x="Interval no.", y="Mean number of steps per interval")
 plot(plot2)
@@ -106,7 +109,7 @@ print(median_perday2)
 
 ```
 Now we see the median and mean per day don't change. 
-```{r echo=FALSE, plot_steps, fig.width=8, fig.height=4}
+```{r, plot_steps, fig.width=8, fig.height=4}
 require(ggplot2)
 
 #plotting a histogram in ggplot
@@ -126,7 +129,7 @@ activity2$date <- as.Date(activity2$date)
 activity2$day <- as.integer(format(activity2$date,format = '%u')) %in% c(1:5)
 ```
 
-```{r echo=FALSE, steps_perweekpart, fig.width=8, fig.height=4}
+```{r, steps_perweekpart, fig.width=8, fig.height=4}
 
 activity2$week <- factor(ifelse(format(activity2$date,format = '%u') %in% c(1:5),'week','week-end'))
 
@@ -138,11 +141,11 @@ labs(title="Figure 4: week data", x="Interval no.", y="Mean number of steps per 
 plot(plot3)
 ```
 
-```{r echo=FALSE, steps_perweekendpart, fig.width=8, fig.height=4}
+```{r, steps_perweekendpart, fig.width=8, fig.height=4}
 weekendperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$week=="week-end",], FUN=mean, na.action=na.omit)
 
 plot4 <- qplot(weekendperinterval$interval, weekendperinterval$steps,geom='line') + 
-labs(title="Figure 5: week-end data", x="Interval no.", y="Mean number of steps per interval during the week-end")
+labs(title="Figure 5: week-end data", x="Interval no.", y="Mean number of steps per interval")
 
 plot(plot4)
 ```

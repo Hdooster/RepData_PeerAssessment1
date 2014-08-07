@@ -137,8 +137,6 @@ weekperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$
 
 plot3 <- qplot(weekperinterval$interval, weekperinterval$steps,geom='line') + 
 labs(title="Figure 4: week data", x="Interval no.", y="Mean number of steps per interval")
-
-plot(plot3)
 ```
 
 ```{r, steps_perweekendpart, fig.width=8, fig.height=4}
@@ -146,9 +144,14 @@ weekendperinterval <- aggregate(formula = steps~interval, data=activity2[activit
 
 plot4 <- qplot(weekendperinterval$interval, weekendperinterval$steps,geom='line') + 
 labs(title="Figure 5: week-end data", x="Interval no.", y="Mean number of steps per interval")
-
-plot(plot4)
 ```
+
+```{r}
+library("gridExtra")
+grid.arrange(plot3,plot4,nrow=2)
+```
+
+
 
 Here we can see week-ends seem to bring along more variety and a later start of the day, as can be expected with a standard life-style of studying/working in the week and leisure activities in the week-end.
 

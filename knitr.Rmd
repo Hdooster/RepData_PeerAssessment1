@@ -1,6 +1,6 @@
 ---
 title: "Reproducible Research Project 1"
-author: "Hendrik D'Oosterlinck"
+author: "HDooster"
 date: "Wednesday, August 06, 2014"
 output:
   html_document:
@@ -8,10 +8,7 @@ output:
 ---
 
 
-```{r echo=FALSE}
-#This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-#When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-```
+
 
 ##Loading and preprocessing the data and making sure the dates are in class 'Date', not in class 'Factor'.
 
@@ -37,7 +34,7 @@ print(mean_perday)
 print(median_perday)
 ```
 
-```{r echo=FALSE, steps_perday, fig.width=8, fig.height=4}
+```{r echo=TRUE, steps_perday, fig.width=8, fig.height=4}
 require(ggplot2)
 
 #plotting a histogram in ggplot
@@ -51,20 +48,22 @@ plot(histogram)
 
 
 ##What is the average daily activity pattern?
-```{r echo=FALSE, steps_perinterval, fig.width=8, fig.height=4}
+```{r}
 perinterval <- aggregate(formula = steps~interval, data=activity, FUN=mean, na.action=na.omit)
+```
 
+
+```{r echo=TRUE, steps_perinterval, fig.width=8, fig.height=4}
 plot2 <- qplot(perinterval$interval, perinterval$steps,geom='line') + 
 labs(title="Figure 2", x="Interval no.", y="Mean number of steps per interval")
-
 plot(plot2)
 ```
 
-##Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+##Which 5-minute interval contains the maximum number of steps?
 To find this one we just ask R for the row in 'perinterval' where the steps value is largest using function which.
 ```{r}
 perinterval[which(perinterval$steps==max(perinterval$steps)),]
-
+print(perinterval)
 ```
 
 ##NA-values
@@ -77,6 +76,7 @@ print(missingvalues)
 ```
 
 2-3. Filling in the missing values
+
 If a step has a missing value NA, replace that missing value with the average for that step (across multiple days).
 ```{r}
 #head(activity)

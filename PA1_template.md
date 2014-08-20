@@ -48,7 +48,7 @@ histogram <-  qplot(perday$date, perday$steps, stat='summary', fun.y=sum, geom='
 plot(histogram)
 
 ```
-![plot of chunk steps_perday](figure/steps_perday.png)
+![plot of chunk steps_perday](figures/steps_perday.png)
 
 ##What is the average daily activity pattern?
 
@@ -63,7 +63,7 @@ labs(title="Figure 2", x="Interval no.", y="Mean number of steps per interval")
 plot(plot2)
 
 ```
-![plot of chunk steps_perinterval](figure/steps_perinterval.png)
+![plot of chunk steps_perinterval](figures/steps_perinterval.png)
 
 ##Which 5-minute interval contains the maximum number of steps?
 To find this one we just ask R for the row in 'perinterval' where the steps value is largest using function which.
@@ -122,7 +122,7 @@ histogram2 <-  qplot(x=date, y=steps, data=perday2, stat='summary', fun.y=sum, g
 plot(histogram2)
 
 ```
-![plot of chunk plot_steps](figure/plot_steps.png)
+![plot of chunk plot_steps](figures/plot_steps.png)
 
 ##Differences in week and week-end days.
 
@@ -141,20 +141,20 @@ weekperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$
 plot3 <- qplot(weekperinterval$interval, weekperinterval$steps,geom='line') + 
 labs(title="Figure 4: week data", x="Interval no.", y="Mean number of steps per interval")
 ```
-![plot of chunk steps_perweekpart](figure/steps_perweekpart.png)
+![plot of chunk steps_perweekpart](figures/steps_perweekpart.png)
 ```{r, steps_perweekendpart, fig.width=8, fig.height=4}
 weekendperinterval <- aggregate(formula = steps~interval, data=activity2[activity2$week=="week-end",], FUN=mean, na.action=na.omit)
 
 plot4 <- qplot(weekendperinterval$interval, weekendperinterval$steps,geom='line') + 
 labs(title="Figure 5: week-end data", x="Interval no.", y="Mean number of steps per interval")
 ```
-![plot of chunk steps_perweekendpart](figure/steps_perweekendpart.png)
+![plot of chunk steps_perweekendpart](figures/steps_perweekendpart.png)
 ```{r}
 library("gridExtra")
 grid.arrange(plot3,plot4,nrow=2)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png)
+![plot of chunk unnamed-chunk-10](figures/unnamed-chunk-10.png)
 
 Here we can see week-ends seem to bring along more variety and a later start of the day, as can be expected with a standard life-style of studying/working in the week and leisure activities in the week-end.
 
